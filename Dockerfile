@@ -1,5 +1,5 @@
 # Template used: https://github.com/vercel/next.js/blob/HEAD/examples/with-docker/Dockerfile (at the time of writing this was the canary branch)
-https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+# Prob has latest updates: https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
 
 # syntax=docker.io/docker/dockerfile:1
 
