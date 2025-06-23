@@ -20,15 +20,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }} # Use the GitHub token for authentication
 
-      - name: Extract metadata (tags, labels)
-        id: meta
+      - name: Extract metadata for development
+        id: meta-dev
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}
+          images: ghcr.io/${{ github.repository }}
           tags: |
-            type=raw,value=${{ github.ref }}-dev,enable={{is_default}} # Tag for ref-dev
-            type=raw,value=${{ github.ref }}-prod,enable={{is_default}} # Tag for ref-prod
-            type=sha # Add a tag based on the commit SHA
+            type=ref,event=branch,enable=true,prefix={{raw}}-dev # Use branch name as tag
+            type=sha,format=long # Optional: also tag with SHA
+      - name: Extract metadata for production
+        id: meta-prod
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=branch,enable=true,prefix={{raw}}-prod # Use branch name as tag
+            type=sha,format=long # Optional: also tag with SHA
 
       - name: Build and push dev image
         uses: docker/build-push-action@v6
@@ -37,8 +44,8 @@ jobs:
           file: Dockerfile
           target: development # Build the dev stage
           push: true
-          tags: ${{ steps.meta.outputs.tags }}-dev
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-dev.outputs.tags }}-dev
+          labels: ${{ steps.meta-dev.outputs.labels }}
 
       - name: Build and push prod image
         uses: docker/build-push-action@v6
@@ -47,5 +54,5 @@ jobs:
           file: Dockerfile
           target: runner # Build the production runner stage
           push: true
-          tags: ${{ steps.meta.outputs.tags }}-prodd
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-prod.outputs.tags }}-prod
+          labels: ${{ steps.meta-prod.outputs.labels }}
