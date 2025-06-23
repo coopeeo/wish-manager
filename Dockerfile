@@ -24,7 +24,7 @@ FROM node:alpine AS runner
 WORKDIR /app
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY package.json ./
+COPY package.json pnpm-lock.yaml ./
 RUN corepack enable pnpm
 RUN pnpm install --frozen-lockfile
 CMD ["pnpm", "run", "start"]
