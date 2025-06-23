@@ -26,7 +26,7 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
-            type=ref,event=branch,enable=true,prefix={{raw}}-dev # Use branch name as tag
+            type=ref,event=branch,enable=true,prefix=dev-{{raw}} # Use branch name as tag
             type=sha,format=long # Optional: also tag with SHA
       - name: Extract metadata for production
         id: meta-prod
@@ -34,7 +34,7 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
-            type=ref,event=branch,enable=true,prefix={{raw}}-prod # Use branch name as tag
+            type=ref,event=branch,enable=true,prefix=prod-{{raw}} # Use branch name as tag
             type=sha,format=long # Optional: also tag with SHA
 
       - name: Build and push dev image
