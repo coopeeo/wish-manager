@@ -13,7 +13,7 @@ CMD ["pnpm", "run", "dev"]
 FROM node:alpine AS builder
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
-ENV NEXT_TELEMETRY_DISABLED=1# ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN corepack enable pnpm
 RUN pnpm install --frozen-lockfile --prod
 COPY . .
