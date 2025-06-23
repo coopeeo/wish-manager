@@ -3,15 +3,11 @@ name: Build and Push Docker Images
 on:
   push:
     branches:
-      - '*' # Trigger on any branch push
+      - main # Trigger on pushes to the 'main' branch
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read # Allow read access to repository contents
-      packages: write # Allow writing to GitHub Packages (ghcr.io)
-      id-token: write # Required for OIDC authentication
 
     steps:
       - name: Checkout code
@@ -30,8 +26,9 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}
           tags: |
-            type=ref,event=branch,enable=true,prefix={{raw}} # Use branch name as tag
-            type=sha,format=long # Optional: also tag with SHA
+            type=raw,value=${{ github.ref }}-dev,enable={{is_default}} # Tag for ref-dev
+            type=raw,value=${{ github.ref }}-prod,enable={{is_default}} # Tag for ref-prod
+            type=sha # Add a tag based on the commit SHA
 
       - name: Build and push dev image
         uses: docker/build-push-action@v6
@@ -40,7 +37,7 @@ jobs:
           file: Dockerfile
           target: development # Build the dev stage
           push: true
-          tags: ${{ steps.meta.outputs.tags }}-dev # Append -dev to the tag
+          tags: ${{ steps.meta.outputs.tags }}-dev
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Build and push prod image
@@ -50,5 +47,5 @@ jobs:
           file: Dockerfile
           target: runner # Build the production runner stage
           push: true
-          tags: ${{ steps.meta.outputs.tags }}-prod # Append -prod to the tag
+          tags: ${{ steps.meta.outputs.tags }}-prodd
           labels: ${{ steps.meta.outputs.labels }}
