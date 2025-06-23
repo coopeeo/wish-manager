@@ -49,7 +49,7 @@ jobs:
           file: Dockerfile
           target: development # Build the dev stage
           push: true
-          tags: ${{ steps.meta-dev.outputs.tags }}-dev
+          tags: ${{ steps.meta-dev.outputs.tags }}
           labels: ${{ steps.meta-dev.outputs.labels }}
 
       - name: Build and push prod image
@@ -59,5 +59,5 @@ jobs:
           file: Dockerfile
           target: runner # Build the production runner stage
           push: true
-          tags: ${{ steps.meta-prod.outputs.tags }}-prod
+          tags: ${{ steps.meta-prod.outputs.tags }}
           labels: ${{ steps.meta-prod.outputs.labels }}
