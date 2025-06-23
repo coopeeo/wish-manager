@@ -15,7 +15,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN corepack enable pnpm
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm run build
 
@@ -26,5 +26,5 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY package.json ./
 RUN corepack enable pnpm
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --frozen-lockfile
 CMD ["pnpm", "run", "start"]
